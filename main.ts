@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-class Vector
+export class Vector
 {
     i: number;
     j: number;
@@ -12,7 +12,7 @@ class Vector
         this.k = k;
     }
 
-    static origin() {
+    static zero() {
         return new Vector(0, 0, 0);
     }
 
@@ -61,17 +61,17 @@ export class FaceConnector
     static toFace(
         firstBasis: Vector, firstScalar: number,
         secondBasis: Vector, secondScalar: number,
-        offset: Vector = Vector.origin(),
+        offset: Vector = Vector.zero(),
     ): Face {
-        const firstBasisScaled = offset.add(firstBasis).scale(firstScalar);
-        const secondBasisScaled = offset.add(secondBasis).scale(secondScalar);
+        const firstBasisScaled = firstBasis.scale(firstScalar);
+        const secondBasisScaled = secondBasis.scale(secondScalar);
 
         return [
-            offset.triple,
-            firstBasisScaled.triple,
-            secondBasisScaled.triple,
-            firstBasisScaled.add(secondBasisScaled).triple,
-        ];
+            Vector.zero(),
+            firstBasisScaled,
+            secondBasisScaled,
+            firstBasisScaled.add(secondBasisScaled),
+        ].map((vector) => vector.add(offset).triple);
     }
 
     static synchronizeParcel(parcel: Parcel): Face[] {
@@ -81,11 +81,14 @@ export class FaceConnector
 
         return [
             FaceConnector.toFace(i, parcel.length, j, parcel.width),
-            FaceConnector.toFace(i, parcel.length, j, parcel.width, k),
+            FaceConnector.toFace(i, parcel.length, j, parcel.width,
+                k.scale(parcel.height)),
             FaceConnector.toFace(i, parcel.length, k, parcel.height),
-            FaceConnector.toFace(i, parcel.length, k, parcel.height, j),
+            FaceConnector.toFace(i, parcel.length, k, parcel.height,
+                j.scale(parcel.width)),
             FaceConnector.toFace(j, parcel.width, k, parcel.height),
-            FaceConnector.toFace(j, parcel.width, k, parcel.height, i),
+            FaceConnector.toFace(j, parcel.width, k, parcel.height,
+                i.scale(parcel.length)),
         ];
     }
 }

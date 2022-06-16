@@ -4,19 +4,27 @@
   "description": "A silly connector to convert a box to its faces",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "add": "node cli.mjs"
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "add": "node cli.js"
   },
   "author": "Jackson",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.17.0",
     "eslint-config-google": "^0.14.0",
+    "jest": "^28.1.1",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.3"
   },
   "dependencies": {
     "@types/node": "^18.0.0"
+  },
+  "type": "module",
+  "jest": {
+    "transform": {},
+    "extensionsToTreatAsEsm": [".ts"]
   }
 }

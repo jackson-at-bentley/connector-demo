@@ -1,5 +1,5 @@
-import { readParcel } from './main.mjs';
-import { FaceConnector, FaceRepository } from './main.mjs';
+import { readParcel } from './main.js';
+import { FaceConnector, FaceRepository } from './main.js';
 
 function cli(): void {
     const args = process.argv.slice(2);
