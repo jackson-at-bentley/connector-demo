@@ -4,6 +4,7 @@
   "description": "A silly connector to convert a box to its faces",
   "main": "main.js",
   "scripts": {
+    "compile": "npx tsc",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "add": "node cli.js"
   },
