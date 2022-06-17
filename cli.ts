@@ -13,8 +13,8 @@ function cli(): void {
     const parcel = readParcel(path);
 
     if (parcel) {
-        const faces = FaceConnector.synchronizeParcel(parcel);
-        FaceRepository.writeFaces('./faces.json', faces);
+        const elements = FaceConnector.synchronizeParcel(parcel);
+        FaceRepository.writeElement('./elements.json', elements);
     }
 }
 

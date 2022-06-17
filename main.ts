@@ -32,26 +32,31 @@ export class Vector
 type Parcel = {
     length: number,
     width: number,
-    height: number
+    height: number,
+    [index: string]: unknown,
 }
 
 export function readParcel(path: string): Parcel | null
 {
     const parsed: any = JSON.parse(readFileSync(path, 'utf8'));
 
-    const properties = [ 'length', 'width', 'height' ];
+    const required = [ 'length', 'width', 'height' ];
 
-    for (const property of properties) {
-        if (!(property in parsed && typeof parsed[property] == 'number')) {
+    for (const property of required) {
+        if (property in required && typeof parsed[property] !== 'number') {
             return null;
         }
     }
 
-    return {
-        length: parsed.length,
-        width: parsed.width,
-        height: parsed.height,
-    };
+    let parcel: Parcel = { length: parsed.length, width: parsed.width, height: parsed.height };
+
+    for (const property of Object.keys(parsed)) {
+        if (!required.includes(property)) {
+            parcel[property] = parsed[property];
+        }
+    }
+
+    return parcel;
 }
 
 type Face = [number, number, number][];
@@ -74,12 +79,18 @@ export class FaceConnector
         ].map((vector) => vector.add(offset).triple);
     }
 
-    static synchronizeParcel(parcel: Parcel): Face[] {
+    static synchronizeParcel(parcel: Parcel): Element {
         const i = new Vector(1, 0, 0); // length basis
         const j = new Vector(0, 1, 0); // width basis
         const k = new Vector(0, 0, 1); // height basis
 
-        return [
+        let color = Object.keys(parcel).includes('color') && (typeof parcel.color == 'string')
+                  ? parcel.color : undefined;
+
+        let opacity = Object.keys(parcel).includes('opacity') && (typeof parcel.opacity == 'number')
+                  ? parcel.opacity : undefined;
+
+        const element: Element = { faces: [
             FaceConnector.toFace(i, parcel.length, j, parcel.width),
             FaceConnector.toFace(i, parcel.length, j, parcel.width,
                 k.scale(parcel.height)),
@@ -89,13 +100,24 @@ export class FaceConnector
             FaceConnector.toFace(j, parcel.width, k, parcel.height),
             FaceConnector.toFace(j, parcel.width, k, parcel.height,
                 i.scale(parcel.length)),
-        ];
+        ]};
+
+        if (color) { element.color = color; }
+        if (opacity) { element.opacity = opacity; }
+
+        return element;
     }
+}
+
+type Element = {
+    faces: Face[],
+    color?: string,
+    opacity?: number,
 }
 
 export class FaceRepository
 {
-    static writeFaces(path: string, faces: Face[]): void {
+    static writeElement(path: string, element: Element): void {
         if (!existsSync(path)) {
             writeFileSync(
                 path, JSON.stringify([]),
@@ -106,7 +128,7 @@ export class FaceRepository
         const repository = JSON.parse(readFileSync(path, 'utf8'));
 
         if (Array.isArray(repository)) {
-            repository.push(faces);
+            repository.push(element);
 
             writeFileSync(
                 path, JSON.stringify(repository),
