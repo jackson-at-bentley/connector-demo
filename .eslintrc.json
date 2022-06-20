@@ -21,7 +21,9 @@
             "rules": {
                 "array-bracket-spacing": "off",
                 "brace-style": "off",
+                "block-spacing": "off",
                 "indent": "off",
+                "max-len": "off",
                 "object-curly-spacing": "off",
                 "require-jsdoc": "off"
             }

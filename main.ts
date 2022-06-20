@@ -1,5 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
+import { BaseConnector } from '@itwin/connector-framework';
+
 export class Vector
 {
     i: number;
@@ -48,7 +50,11 @@ export function readParcel(path: string): Parcel | null
         }
     }
 
-    let parcel: Parcel = { length: parsed.length, width: parsed.width, height: parsed.height };
+    const parcel: Parcel = {
+        length: parsed.length,
+        width: parsed.width,
+        height: parsed.height,
+    };
 
     for (const property of Object.keys(parsed)) {
         if (!required.includes(property)) {
@@ -61,52 +67,51 @@ export function readParcel(path: string): Parcel | null
 
 type Face = [number, number, number][];
 
-export class FaceConnector
-{
-    static toFace(
-        firstBasis: Vector, firstScalar: number,
-        secondBasis: Vector, secondScalar: number,
-        offset: Vector = Vector.zero(),
-    ): Face {
-        const firstBasisScaled = firstBasis.scale(firstScalar);
-        const secondBasisScaled = secondBasis.scale(secondScalar);
+export function toFace(
+    firstBasis: Vector, firstScalar: number,
+    secondBasis: Vector, secondScalar: number,
+    offset: Vector = Vector.zero(),
+): Face {
+    const firstBasisScaled = firstBasis.scale(firstScalar);
+    const secondBasisScaled = secondBasis.scale(secondScalar);
 
-        return [
-            Vector.zero(),
-            firstBasisScaled,
-            secondBasisScaled,
-            firstBasisScaled.add(secondBasisScaled),
-        ].map((vector) => vector.add(offset).triple);
-    }
+    return [
+        Vector.zero(),
+        firstBasisScaled,
+        secondBasisScaled,
+        firstBasisScaled.add(secondBasisScaled),
+    ].map((vector) => vector.add(offset).triple);
+}
 
-    static synchronizeParcel(parcel: Parcel): Element {
-        const i = new Vector(1, 0, 0); // length basis
-        const j = new Vector(0, 1, 0); // width basis
-        const k = new Vector(0, 0, 1); // height basis
+export function synchronizeParcel(parcel: Parcel): Element {
+    const i = new Vector(1, 0, 0); // length basis
+    const j = new Vector(0, 1, 0); // width basis
+    const k = new Vector(0, 0, 1); // height basis
 
-        let color = Object.keys(parcel).includes('color') && (typeof parcel.color == 'string')
-                  ? parcel.color : undefined;
+    const color = Object.keys(parcel).includes('color') &&
+        (typeof parcel.color == 'string') ?
+        parcel.color : undefined;
 
-        let opacity = Object.keys(parcel).includes('opacity') && (typeof parcel.opacity == 'number')
-                  ? parcel.opacity : undefined;
+    const opacity = Object.keys(parcel).includes('opacity') &&
+        (typeof parcel.opacity == 'number') ?
+        parcel.opacity : undefined;
 
-        const element: Element = { faces: [
-            FaceConnector.toFace(i, parcel.length, j, parcel.width),
-            FaceConnector.toFace(i, parcel.length, j, parcel.width,
-                k.scale(parcel.height)),
-            FaceConnector.toFace(i, parcel.length, k, parcel.height),
-            FaceConnector.toFace(i, parcel.length, k, parcel.height,
-                j.scale(parcel.width)),
-            FaceConnector.toFace(j, parcel.width, k, parcel.height),
-            FaceConnector.toFace(j, parcel.width, k, parcel.height,
-                i.scale(parcel.length)),
-        ]};
+    const element: Element = { faces: [
+        toFace(i, parcel.length, j, parcel.width),
+        toFace(i, parcel.length, j, parcel.width,
+            k.scale(parcel.height)),
+        toFace(i, parcel.length, k, parcel.height),
+        toFace(i, parcel.length, k, parcel.height,
+            j.scale(parcel.width)),
+        toFace(j, parcel.width, k, parcel.height),
+        toFace(j, parcel.width, k, parcel.height,
+            i.scale(parcel.length)),
+    ]};
 
-        if (color) { element.color = color; }
-        if (opacity) { element.opacity = opacity; }
+    if (color) { element.color = color; }
+    if (opacity) { element.opacity = opacity; }
 
-        return element;
-    }
+    return element;
 }
 
 type Element = {

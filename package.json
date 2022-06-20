@@ -6,12 +6,15 @@
   "scripts": {
     "compile": "npx tsc",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "add": "node cli.js"
+    "add": "node --preserve-symlinks cli.js",
+    "unit": "npm run compile && npm run add -- unit.json"
   },
   "author": "Jackson",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^28.1.1",
+    "@types/node": "16.11.7",
+    "@types/ws": "^8.5.3",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.17.0",
@@ -21,11 +24,16 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@types/node": "^18.0.0"
+    "@bentley/imodeljs-native": "3.2.11",
+    "@itwin/connector-framework": "^0.1.0",
+    "@itwin/core-backend": "^3.2.3",
+    "@itwin/ecschema-metadata": "^3.2.3"
   },
   "type": "module",
   "jest": {
     "transform": {},
-    "extensionsToTreatAsEsm": [".ts"]
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ]
   }
 }
