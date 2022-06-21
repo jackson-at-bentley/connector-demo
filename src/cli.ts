@@ -2,7 +2,8 @@ import { parse } from 'node:path';
 
 import { readParcel, synchronizeParcel } from './main.js';
 import { FaceRepository } from './main.js';
-import { FaceConnector } from './connector.js';
+
+import FaceConnector from './connector.js';
 
 import { ConnectorRunner, JobArgs } from '@itwin/connector-framework';
 import { IModelHost, IModelHostConfiguration } from '@itwin/core-backend';
@@ -25,7 +26,7 @@ async function cli(): Promise<void> {
     });
 
     const runner = new ConnectorRunner(jobArgs);
-    runner.run(new FaceConnector());
+    runner.run(FaceConnector);
 
     if (!path) {
         console.log('usage: npm run add -- box');
