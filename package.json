@@ -5,10 +5,11 @@
   "author": "Jackson",
   "license": "ISC",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "compile": "npx tsc",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "add": "node --preserve-symlinks ./build/cli.js",
+    "add": "node --preserve-symlinks build/cli.js",
     "unit": "npm run compile && npm run add -- unit.json"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "@itwin/ecschema-metadata": "^3.2.3"
   },
   "jest": {
-    "transform": {}
+    "transform": {},
+    "roots": ["build"]
   }
 }
