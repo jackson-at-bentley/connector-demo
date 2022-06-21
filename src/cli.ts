@@ -1,31 +1,35 @@
-import { parse } from 'node:path';
+const { join, parse } = require('node:path');
 
-import { readParcel, synchronizeParcel } from './main.js';
-import { FaceRepository } from './main.js';
-import { FaceConnector } from './connector.js';
+const { readParcel, synchronizeParcel } = require('./main.js');
+const { FaceRepository } = require('./main.js');
 
-import { ConnectorRunner, JobArgs } from '@itwin/connector-framework';
-import { IModelHost, IModelHostConfiguration } from '@itwin/core-backend';
+const { ConnectorRunner } = require('@itwin/connector-framework');
+const { IModelHost, IModelHostConfiguration } = require('@itwin/core-backend');
+
+// TODO: Export the `JobArgs` type.
+const { JobArgs } = require('../node_modules/@itwin/connector-framework/lib/Args.js');
 
 async function cli(): Promise<void> {
     const args = process.argv.slice(2);
     const path = args[0];
     const context = process.argv[1];
 
-    const directory = parse(context).dir;
+    const directory = parse(context);
 
     const configuration = new IModelHostConfiguration();
-    configuration.cacheDir = directory;
+    configuration.cacheDir = directory.dir;
     await IModelHost.startup(configuration);
 
     const jobArgs = new JobArgs({
       source: 'unit.json',
-      stagingDir: directory,
+      stagingDir: directory.dir,
       dbType: 'snapshot',
     });
 
     const runner = new ConnectorRunner(jobArgs);
-    runner.run(new FaceConnector());
+    const connector = join(directory.dir, 'connector.js');
+    console.log(connector);
+    runner.run(connector);
 
     if (!path) {
         console.log('usage: npm run add -- box');

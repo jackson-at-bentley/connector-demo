@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+const { existsSync, readFileSync, writeFileSync } = require('node:fs');
 
 export class Vector
 {
