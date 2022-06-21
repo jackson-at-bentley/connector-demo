@@ -1,31 +1,30 @@
-import { parse } from 'node:path';
+import { join, parse } from 'node:path';
 
 import { readParcel, synchronizeParcel } from './main.js';
 import { FaceRepository } from './main.js';
-import { FaceConnector } from './connector.js';
 
-import { ConnectorRunner, JobArgs } from '@itwin/connector-framework';
+import { ConnectorRunner } from '@itwin/connector-framework';
 import { IModelHost, IModelHostConfiguration } from '@itwin/core-backend';
+
+import { JobArgs } from '../node_modules/@itwin/connector-framework/lib/Args.js';
 
 async function cli(): Promise<void> {
     const args = process.argv.slice(2);
     const path = args[0];
-    const context = process.argv[1];
-
-    const directory = parse(context).dir;
+    const root = parse(process.argv[1]);
 
     const configuration = new IModelHostConfiguration();
-    configuration.cacheDir = directory;
+    configuration.cacheDir = root.dir;
     await IModelHost.startup(configuration);
 
     const jobArgs = new JobArgs({
       source: 'unit.json',
-      stagingDir: directory,
+      stagingDir: root.dir,
       dbType: 'snapshot',
     });
 
     const runner = new ConnectorRunner(jobArgs);
-    runner.run(new FaceConnector());
+    runner.run(join(root.dir, 'connector.js'));
 
     if (!path) {
         console.log('usage: npm run add -- box');

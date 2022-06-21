@@ -1,7 +1,11 @@
 import { BaseConnector } from '@itwin/connector-framework';
 
-export class FaceConnector extends BaseConnector
+export default class FaceConnector extends BaseConnector
 {
+    static override async create(): Promise<BaseConnector> {
+        return new FaceConnector();
+    }
+
     initializeJob(): Promise<void> {
         return Promise.resolve(undefined);
     }
