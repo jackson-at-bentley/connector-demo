@@ -1,7 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-import { BaseConnector } from '@itwin/connector-framework';
-
 export class Vector
 {
     i: number;

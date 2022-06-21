@@ -2,15 +2,15 @@
   "name": "connector-demo",
   "version": "1.0.0",
   "description": "A silly connector to convert a box to its faces",
+  "author": "Jackson",
+  "license": "ISC",
   "main": "main.js",
   "scripts": {
     "compile": "npx tsc",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "add": "node --preserve-symlinks cli.js",
+    "add": "node --preserve-symlinks ./build/cli.js",
     "unit": "npm run compile && npm run add -- unit.json"
   },
-  "author": "Jackson",
-  "license": "ISC",
   "devDependencies": {
     "@types/jest": "^28.1.1",
     "@types/node": "16.11.7",
@@ -29,11 +29,7 @@
     "@itwin/core-backend": "^3.2.3",
     "@itwin/ecschema-metadata": "^3.2.3"
   },
-  "type": "module",
   "jest": {
-    "transform": {},
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ]
+    "transform": {}
   }
 }

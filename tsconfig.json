@@ -1,9 +1,11 @@
 {
+  "include": ["src/*"],
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
     "strict": true,
-    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "build"
   }
 }
