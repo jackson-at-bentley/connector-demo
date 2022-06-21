@@ -1,4 +1,4 @@
-const { toFace, Vector } = require('./main.js');
+import { toFace, Vector } from './main.js';
 
 test('rectangular face from orthogonal pair', () => {
     const firstBasis = new Vector(1, 0, 0);

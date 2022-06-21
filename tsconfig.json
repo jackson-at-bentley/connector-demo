@@ -1,7 +1,7 @@
 {
   "include": ["src/*"],
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
     "strict": true,
