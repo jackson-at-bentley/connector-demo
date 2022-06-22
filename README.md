@@ -1,9 +1,8 @@
-### When running on the `framework` branch
+### When running on the `unmodified-framework` branch
 
 In `connector-framework`:
 
 ```
-git clone https://github.com/jackson-at-bentley/connector-framework
 npm install
 npm run build
 npm link
@@ -12,6 +11,7 @@ npm link
 In `connector-demo`:
 
 ```
+git checkout unmodified-framework
 npm install
 npm run compile
 npm link @itwin/connector-framework
