@@ -12,6 +12,7 @@ npm link
 In `connector-demo`:
 
 ```
+git checkout framework
 npm install
 npm run compile
 npm link @itwin/connector-framework
