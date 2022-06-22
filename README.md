@@ -3,6 +3,7 @@
 In `connector-framework`:
 
 ```
+git clone https://github.com/iTwin/connector-framework
 npm install
 npm run build
 npm link
