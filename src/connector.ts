@@ -31,7 +31,7 @@ export default class FaceConnector extends BaseConnector
     }
 
     getApplicationId(): string {
-        return 'face-application';
+        throw new Error('Method not implemented.');
     }
 
     getApplicationVersion(): string {
