@@ -1,4 +1,4 @@
-import { parse } from 'node:path';
+import { join, parse } from 'node:path';
 
 import { readParcel, synchronizeParcel } from './main.js';
 import { FaceRepository } from './main.js';
@@ -14,16 +14,19 @@ async function cli(): Promise<void> {
     const context = process.argv[1];
 
     const directory = parse(context).dir;
+    console.log(directory);
 
     const configuration = new IModelHostConfiguration();
     configuration.cacheDir = directory;
     await IModelHost.startup(configuration);
 
     const jobArgs = new JobArgs({
-      source: 'unit.json',
+      source: '/home/jackson/bentley/connector-demo/unit.json',
       stagingDir: directory,
       dbType: 'snapshot',
     });
+
+    console.log(jobArgs);
 
     const runner = new ConnectorRunner(jobArgs);
     runner.run(FaceConnector);
