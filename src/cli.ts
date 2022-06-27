@@ -14,14 +14,17 @@ async function cli(): Promise<void> {
     const context = process.argv[1];
 
     const directory = parse(context).dir;
-    console.log(directory);
+
+    console.log(`cache directory ${directory}`);
 
     const configuration = new IModelHostConfiguration();
     configuration.cacheDir = directory;
     await IModelHost.startup(configuration);
 
+    console.log(`host is valid? ${IModelHost.isValid}`);
+
     const jobArgs = new JobArgs({
-      source: '/home/jackson/bentley/connector-demo/unit.json',
+      source: 'not used',
       stagingDir: directory,
       dbType: 'snapshot',
     });
