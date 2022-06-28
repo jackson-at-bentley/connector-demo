@@ -4,6 +4,7 @@ In `connector-framework`:
 
 ```
 git clone https://github.com/jackson-at-bentley/connector-framework
+git checkout coverage
 npm install
 npm run build
 npm link
